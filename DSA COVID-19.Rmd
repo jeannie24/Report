@@ -1,0 +1,52 @@
+---
+title: "DSA - COVID-19 Portal Report"
+author: "Jeannie Teo"
+date: "16/11/2022"
+output:
+  word_document: default
+  html_document: default
+  PDF: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message=FALSE)
+library = function(...) suppressPackageStartupMessages(base::library(...))
+```
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+```
+
+Stats NZ's COVID-19 data portal gathers key economic, health, income support, social, and environmental indicators to help monitor the impact of COVID-19 on New Zealand. It features graphs from various government agencies and private sector organisations to allow users to see what's happening to different components of the economy, society and environment. 
+
+This report is about the departures of the daily border crossings out of New Zealand. I chose this particular indicator as I felt that COVID-19 did cause a huge impact on people going out of the country. It was interesting to see and compare between the frequency of international and local people flying out of New Zealand.  
+
+The data was downloaded from the data portal and saved as a csv file; and then it was read and loaded into memory in R. I had to download packages 'tidyverse' and 'ggplot2' before running the models. After running the models, I plotted a time series graph to visualise the dataset that I chose. 
+
+I did not remove any outliers as the dataset was obtained from reliable sources; the data entered and measured would be assumed to be accurate. Looking at the boxplot of the model, I could see that there were no outliers detected, thus removal of outliers was not necessary. 
+
+```{r}
+mydata.departure = read.csv('Departure.csv', header = TRUE)
+mydata.departure$Period = as.Date(mydata.departure$Period)
+boxplot(mydata.departure$Value, ylab = "Value", main = 'Boxplot for departure dataset')
+```
+
+I presented my data by plotting a time series graph. The plot below shows the number of people (locals and internationals) departing from New Zealand since 2016.
+
+```{r}
+p = ggplot(mydata.departure, aes(x = Period, y = Value, col = Label1)) +
+  geom_line()
+p + scale_x_date(date_labels = "%b %y") + ggtitle("Daily Border Crossings - Departures") +  xlab("Year") + 
+  ylab("Numbers")
+```
+
+In the time series graph that I plotted, I discovered that, in general, locals do not travel out of New Zealand as much as internationals leaving throughout the years 2016 to 2020. However, this is probably due to the fact that internationals who fly into the country are mostly tourists and they would only come to visit the country and leave after staying there for awhile.  
+
+But a few months into the year 2020, we can see that internationals leaving NZ was pretty much non-existent due to COVID as borders were closed and the country was on lockdown. There were still movements of locals leaving the country during that period but it was down to a minimal. There was a slight peak in June 2021 for the departures of both locals and internationals. The numbers went down again after that as it was when the second lockdown happened and borders were closed again. However, the numbers are gradually going up again since the beginning of 2022 as the borders started to open for people to arrive and depart the country. We can see that although the numbers are slowly increasing daily, they (numbers) are not as high as before; this is because flight tickets are more expensive compared to pre-covid days, and flying is not as convenient as before (wearing masks, and quarantining).  
+
+One interesting thing that I noticed in the numbers of departures throughout the years 2016 until 2022 is that the numbers of internationals leaving the country was greater than locals leaving initially. But after COVID-19, the numbers somehow switched in a way that the number of locals leaving New Zealand is greater than internationals leaving the country. 
+
+To improve the COVID-19 portal, it would be helpful to have a FAQ section so that it can save time and effort for people behind the scenes to respond to the feedback given by users. Besides letting users give feedback via email, users should also provide feedback via phone calls as some users explain better verbally.  It would also be recommended to put in the working hours if phone calls are implemented.
+
